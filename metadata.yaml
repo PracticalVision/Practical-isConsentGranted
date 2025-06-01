@@ -1,0 +1,5 @@
+homepage: "https://practicalvision.co.il"
+documentation: "https://practicalvision.co.il/gtm-templates/practical-isconsentgranted/"
+versions:
+  - sha: SHA_PLACEHOLDER
+    changeNotes: Initial release.
