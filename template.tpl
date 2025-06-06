@@ -537,11 +537,66 @@ ___WEB_PERMISSIONS___
 
 ___TESTS___
 
-scenarios: []
+scenarios:
+- name: Skip init_consent
+  code: |-
+    // Override event name
+    mock('copyFromDataLayer', () => 'gtm.init_consent');
+
+    const mockData = {};
+
+    let result = runCode(mockData);
+    assertThat(result).isEqualTo('not set');
+- name: Single consent granted (analytics_storage)
+  code: |-
+    // Default map already grants analytics_storage
+    const mockData = { consent_type: 'analytics_storage' };
+
+    let result = runCode(mockData);
+    assertThat(result).isEqualTo('granted');
+- name: Multiple consent – all rows pass
+  code: |-
+    // analytics_storage is granted, ad_storage is denied → desired states match
+    const mockData = {
+      multiple_consent_checkup: true,
+      multiple_consent_types: [
+        { consent_type: 'analytics_storage', desired_state: 'granted' },
+        { consent_type: 'ad_storage',        desired_state: 'denied' }
+      ]
+    };
+
+    let result = runCode(mockData);
+    assertThat(result).isEqualTo(true);
+- name: Multiple consent – fails when ad_storage expected granted
+  code: |-
+    // ad_storage is denied by default but desired_state is 'granted' → should fail
+    const mockData = {
+      multiple_consent_checkup: true,
+      multiple_consent_types: [
+        { consent_type: 'ad_storage', desired_state: 'granted' }
+      ]
+    };
+
+    let result = runCode(mockData);
+    assertThat(result).isEqualTo(false);
+setup: |-
+  const consentState = {
+    ad_storage:            false,
+    ad_user_data:          false,
+    ad_personalization:    false,
+    analytics_storage:     true,
+    functionality_storage: true,
+    personalization_storage: true,
+    security_storage:      true
+  };
+
+  // Mock isConsentGranted – granted unless explicitly false
+  mock('isConsentGranted', type => consentState[type] !== false);
+
+  // Default event
+  mock('copyFromDataLayer', () => 'gtm.js');
 
 
 ___NOTES___
 
 Created on 5/31/2025, 8:35:53 PM
-
-
