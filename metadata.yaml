@@ -1,7 +1,7 @@
 homepage: "https://practicalvision.co.il"
 documentation: "https://practicalvision.co.il/gtm-templates/practical-isconsentgranted/"
 versions:
-  - sha: SHA_PLACEHOLDER
+  - sha: c1740eda9484e1fc8f6054e6b7cb4f9bc9b14ff7
     changeNotes: Template tests added.
   - sha: b0704ca71d23451aa37cc4d79f0d653d3a50cff4
     changeNotes: Initial release.
